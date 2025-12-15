@@ -26,4 +26,9 @@ coverage/
 # Package lock files (keep package-lock.json)
 yarn.lock
 pnpm-lock.yaml
+
+ReadmeGitSteps.bat
+ReadmeGitStepsInitCreds.bat
+ReadmeGitStepsInitFirst.bat
 readmeSecrets.txt
+

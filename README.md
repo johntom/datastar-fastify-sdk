@@ -1,6 +1,6 @@
 <p align="center"><img width="150" height="150" src="https://data-star.dev/static/images/rocket-512x512.png"></p>
 
-# Datastar Fastify SDK
+# Datastar Fastify SDK 
 
 un-official [Datastar](https://data-star.dev) SDK for [Fastify](https://fastify.dev) - Build reactive web applications with Server-Sent Events.
 
