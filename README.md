@@ -2,33 +2,32 @@
 
 # Datastar Fastify SDK
 
-Official [Datastar](https://data-star.dev) SDK for [Fastify](https://fastify.dev) - Build reactive web applications with Server-Sent Events.
+un-official [Datastar](https://data-star.dev) SDK for [Fastify](https://fastify.dev) - Build reactive web applications with Server-Sent Events.
 
 
 
 
-
-This package provides a Go SDK for working with Datastar.
-
-
+This package provides a Nodejs/Fastify SDK for working with Datastar.
 
 ## Requirements
 
-- **Node.js 20+** (required by Fastify 5)
+- **Node.js 20+**  (required by Fastify 5)
+- Tested with **Node.js 24+**  (required by Fastify 5)
+
 - **Fastify 5.x**
 - **Datastar 1.0.0-RC.6** (client-side)
 
 ## Installation
 
 ```bash
-npm install @starfederation/datastar-fastify fastify
+npm install @johntom/datastar-fastify-sdk
 ```
 
 ## Quick Start
 
 ```javascript
 const Fastify = require('fastify');
-const { datastar, GetSSE, PostSSE } = require('@starfederation/datastar-fastify');
+const { datastar, GetSSE, PostSSE } = require('@johntom/datastar-fastify-sdk');
 
 const app = Fastify({ logger: true });
 
@@ -186,7 +185,7 @@ sse.redirectf('/users/%s', userId);
 Template helpers for generating Datastar attributes:
 
 ```javascript
-const { GetSSE, PostSSE, PutSSE, PatchSSE, DeleteSSE, escapeHtml } = require('@starfederation/datastar-fastify');
+const { GetSSE, PostSSE, PutSSE, PatchSSE, DeleteSSE, escapeHtml } = require('@johntom/datastar-fastify-sdk');
 
 // Generate action attributes
 GetSSE('/api/data')      // "@get('/api/data')"
@@ -215,4 +214,4 @@ npm run example:todo
 
 MIT
 "# datastar-fastify-sdk" 
-"# johntom-datastar-fastify-sdk" 
+
