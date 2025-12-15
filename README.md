@@ -12,7 +12,7 @@ This package provides a Nodejs/Fastify SDK for working with Datastar.
 ## Requirements
 
 - **Node.js 20+**  (required by Fastify 5)
-- Tested with **Node.js 24+**  (required by Fastify 5)
+- Tested with **Node.js 24+**  
 
 - **Fastify 5.x**
 - **Datastar 1.0.0-RC.6** (client-side)
