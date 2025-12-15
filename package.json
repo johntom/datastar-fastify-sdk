@@ -1,0 +1,43 @@
+{
+  "name": "@starfederation/datastar-fastify",
+  "version": "1.0.0-RC.1",
+  "description": "Official Datastar SDK for Fastify - Build reactive web applications with Server-Sent Events",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "example": "node examples/basic.js",
+    "example:todo": "node examples/todo.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "datastar",
+    "fastify",
+    "sse",
+    "server-sent-events",
+    "reactive",
+    "hypermedia",
+    "htmx-alternative"
+  ],
+  "author": "Star Federation",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/starfederation/datastar-fastify"
+  },
+  "homepage": "https://data-star.dev",
+  "bugs": {
+    "url": "https://github.com/starfederation/datastar-fastify/issues"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "fastify-plugin": "^5.1.0"
+  },
+  "peerDependencies": {
+    "fastify": ">=5.0.0"
+  },
+  "devDependencies": {
+    "fastify": "^5.6.2"
+  }
+}
