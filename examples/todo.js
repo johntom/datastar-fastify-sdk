@@ -390,10 +390,10 @@ app.post('/api/todos/clear-completed', async (request, reply) => {
 });
 
 // Start the server
-app.listen({ port: 3000 }, (err) => {
+app.listen({ port: 3001 }, (err) => {
   if (err) {
     app.log.error(err);
     process.exit(1);
   }
-  console.log('Todo App running at http://localhost:3000');
+  console.log('Todo App running at http://localhost:3001');
 });
