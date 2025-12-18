@@ -12,9 +12,9 @@
  */
 
 'use strict';
-
 const Fastify = require('fastify');
 const { datastar, GetSSE, PostSSE, PatchMode } = require('../lib/index');
+// GetSSE, PostSSE, PutSSE, PatchSSE,  DeleteSSE, escapeHtml,PatchMode
 
 const app = Fastify({ logger: true });
 
