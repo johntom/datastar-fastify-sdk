@@ -8,7 +8,7 @@ un-official [Datastar](https://data-star.dev) SDK for [Fastify](https://fastify.
 
 
 This package provides a Nodejs/Fastify SDK for working with Datastar. 
-Version 1.0.4
+Version 1.0.5
 
 ## Requirements
 
