@@ -1,13 +1,14 @@
 {
-  "name": "@starfederation/datastar-fastify",
+  "name": "@johntom/datastar-fastify",
   "version": "1.0.0-RC.1",
-  "description": "Official Datastar SDK for Fastify - Build reactive web applications with Server-Sent Events",
+  "description": "unofficial  Datastar SDK for Fastify - Build reactive web applications with Server-Sent Events",
   "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  
   "scripts": {
     "example": "node examples/basic.js",
     "example:todo": "node examples/todo.js",
-    "test": "node --test"
+    "test": "node run-tests.js",
+    "testserver": "node testserver.js"
   },
   "keywords": [
     "datastar",
@@ -22,11 +23,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/starfederation/datastar-fastify"
+    "url": "https://github.com/johntom/datastar-fastify"
   },
   "homepage": "https://data-star.dev",
   "bugs": {
-    "url": "https://github.com/starfederation/datastar-fastify/issues"
+    "url": "https://github.com/johntom/datastar-fastify/issues"
   },
   "engines": {
     "node": ">=20.0.0"

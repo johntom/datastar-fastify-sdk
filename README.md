@@ -210,7 +210,53 @@ npm run example
 # Full TodoMVC implementation
 npm run example:todo
 ```
+```bash
 
+## Tests
+The test server emulates the Datastar SDK for GO test suite, providing the same functionality as the Go version but implemented in Node.js with Fastify.
+
+Created Files:
+
+  1. testserver.js - Main test server that mirrors the Go implementation
+    - Listens on port 7331 (configurable via TEST_PORT env var)
+    - Handles POST requests to /test endpoint
+    - Processes three event types:
+        - patchElements - Patches HTML elements into the DOM
+      - patchSignals - Updates client-side signals
+      - executeScript - Executes JavaScript in the browser
+    - Supports all options: selector, mode, useViewTransition, onlyIfMissing, autoRemove, attributes, eventId, retryDuration
+    - Handles multiline scripts and signals (using signals-raw field)
+  2. test-request.js - Test client to verify the server works correctly
+    - Tests all three event types
+    - Tests multiple events in a single request
+    - Successfully validated all functionality
+
+  Key Features:
+
+  - Signal Reading: Uses request.readSignals() from the Fastify SDK
+  - SSE Streaming: Uses reply.datastar() to create SSE connections
+  - Event Processing: Handles arrays of events sequentially
+  - Connection Monitoring: Checks if SSE connection is closed before processing each event
+  - Error Handling: Proper error responses with appropriate HTTP status codes
+  - Logging: Uses Fastify's built-in logger
+
+  How to Use:
+
+  # Run automated tests (starts server, runs tests, stops server)
+  npm test
+
+  # Or manually:
+  # 1. Start the test server in one terminal
+  npm run testserver
+
+  # 2. In another terminal, run test requests
+  node test-request.js
+
+  # Custom port
+  TEST_PORT=8080 npm run testserver
+
+  
+```
 ## License
 
 MIT
