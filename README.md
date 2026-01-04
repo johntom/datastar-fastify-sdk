@@ -21,8 +21,17 @@ Version 1.0.5
 ## Installation
 
 ```bash
-npm install @johntom/datastar-fastify-sdk
+
+npm install johntom/datastar-fastify-sdk
+package.json
+"@johntom/datastar-fastify": "github:johntom/datastar-fastify-sdk",
 ```
+ref examples in code 
+const { datastar } = require('@johntom/datastar-fastify')
+const { PatchMode } = require('@johntom/datastar-fastify');
+const { datastar, GetSSE, PostSSE, escapeHtml, PatchMode } = require('@johntom/datastar-fastify');
+const { datastar, GetSSE } = require("@johntom/datastar-fastify");
+const { datastar, PostSSE, DeleteSSE, PatchMode, escapeHtml } = require('@johntom/datastar-fastify');
 
 ## Quick Start
 
