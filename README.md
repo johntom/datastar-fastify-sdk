@@ -37,7 +37,7 @@ const { datastar, PostSSE, DeleteSSE, PatchMode, escapeHtml } = require('@johnto
 
 ```javascript
 const Fastify = require('fastify');
-const { datastar, GetSSE, PostSSE } = require('@johntom/datastar-fastify-sdk');
+const { datastar, GetSSE, PostSSE } = require('@johntom/datastar-fastify');
 
 const app = Fastify({ logger: true });
 
@@ -195,7 +195,7 @@ sse.redirectf('/users/%s', userId);
 Template helpers for generating Datastar attributes:
 
 ```javascript
-const { GetSSE, PostSSE, PutSSE, PatchSSE, DeleteSSE, escapeHtml } = require('@johntom/datastar-fastify-sdk');
+const { GetSSE, PostSSE, PutSSE, PatchSSE, DeleteSSE, escapeHtml } = require('@johntom/datastar-fastify');
 
 // Generate action attributes
 GetSSE('/api/data')      // "@get('/api/data')"
