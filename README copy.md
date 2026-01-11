@@ -1,44 +1,43 @@
 <p align="center"><img width="150" height="150" src="https://data-star.dev/static/images/rocket-512x512.png"></p>
 
-# Datastar Fastify SDK
+# Datastar Fastify SDK 
 
-Unofficial [Datastar](https://data-star.dev) SDK for [Fastify](https://fastify.dev) - Build reactive web applications with Server-Sent Events.
+un-official [Datastar](https://data-star.dev) SDK for [Fastify](https://fastify.dev) - Build reactive web applications with Server-Sent Events.
 
-This package provides a Node.js/Fastify SDK for working with Datastar.
 
-**Version:** 1.0.0-RC.2
+
+
+This package provides a Nodejs/Fastify SDK for working with Datastar. 
+Version 1.0.5
 
 ## Requirements
 
-- **Node.js 20+** (required by Fastify 5)
-- Tested with **Node.js 24+**
+- **Node.js 20+**  (required by Fastify 5)
+- Tested with **Node.js 24+**  
+
 - **Fastify 5.x**
-- **Datastar 1.0.0-RC.7** (client-side)
+- **Datastar 1.0.0-RC.6** (client-side)
 
 ## Installation
 
 ```bash
-# Install from GitHub
-npm install github:johntom/datastar-fastify-sdk
-
-# Or add to package.json
-"@johntom/datastar-fastify": "github:johntom/datastar-fastify-sdk"
+wrong npm install @johntom/datastar-fastify-sdk
+npm install johntom/datastar-fastify-sdk
+package.json
+"@johntom/datastar-fastify": "github:johntom/datastar-fastify-sdk",
 ```
-
-**Import examples:**
-
-```javascript
-const { datastar } = require('@johntom/datastar-fastify');
+ref examples in code 
+const { datastar } = require('@johntom/datastar-fastify')
 const { PatchMode } = require('@johntom/datastar-fastify');
 const { datastar, GetSSE, PostSSE, escapeHtml, PatchMode } = require('@johntom/datastar-fastify');
+const { datastar, GetSSE } = require("@johntom/datastar-fastify");
 const { datastar, PostSSE, DeleteSSE, PatchMode, escapeHtml } = require('@johntom/datastar-fastify');
-```
 
 ## Quick Start
 
 ```javascript
 const Fastify = require('fastify');
-const { datastar, GetSSE, PostSSE } = require('@johntom/datastar-fastify');
+const { datastar, GetSSE, PostSSE } = require('@johntom/datastar-fastify-sdk');
 
 const app = Fastify({ logger: true });
 
@@ -51,7 +50,7 @@ app.get('/', async (request, reply) => {
     <!DOCTYPE html>
     <html>
     <head>
-      <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0-RC.7/bundles/datastar.js"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0-RC.6/bundles/datastar.js"></script>
     </head>
     <body>
       <div data-signals='{"count": 0}'>
@@ -117,7 +116,7 @@ await reply.datastar((sse) => {
 });
 ```
 
-**Options:**
+Options:
 - `onError(error)` - Error callback
 - `onAbort()` - Connection abort callback
 - `keepAlive` - Keep stream open after callback (default: `false`)
@@ -149,8 +148,6 @@ sse.close();
 | `sse.MarshalAndPatchSignals(...)` | `sse.patchSignals(...)` |
 | `sse.PatchElementTempl(...)` | `sse.patchElements(...)` |
 | `sse.ExecuteScript(...)` | `sse.executeScript(...)` |
-| `sse.Send(eventType, dataLines, opts)` | `sse.send(eventType, dataLines, options)` |
-| N/A | `sse.sendEvent(eventType, data, options)` |
 | `<-r.Context().Done()` | `{ onAbort: () => {...} }` |
 
 ## Real-Time Example (Chat/Notifications)
@@ -296,46 +293,12 @@ sse.redirect('/dashboard');
 sse.redirectf('/users/%s', userId);
 ```
 
-#### `sse.send(eventType, dataLines, options)` - Custom Events
-
-Send custom SSE events (matches Go SDK's `Send` method). Use this for event types not covered by the standard Datastar methods.
-
-```javascript
-// Send a custom event with raw data lines
-sse.send('connected', ['{"clientId": "abc123", "boardId": "board1"}']);
-
-// Send with options
-sse.send('notification', ['{"message": "Hello"}'], { eventId: '123' });
-```
-
-#### `sse.sendEvent(eventType, data, options)` - Custom Events (convenience)
-
-Convenience method that auto-serializes data to JSON.
-
-```javascript
-// Send a custom event with object data (auto-serialized)
-sse.sendEvent('connected', { clientId: 'abc123', boardId: 'board1' });
-
-// Send card lock notification
-sse.sendEvent('card-locked', { cardId: '123', userName: 'John' });
-
-// Send with options
-sse.sendEvent('user-joined', { name: 'Alice' }, { eventId: 'evt-001' });
-```
-
-**Comparison with Go SDK:**
-
-| Go SDK | Fastify SDK |
-|--------|-------------|
-| `sse.Send(eventType, dataLines, opts)` | `sse.send(eventType, dataLines, options)` |
-| N/A | `sse.sendEvent(eventType, data, options)` (convenience) |
-
 ### Helper Functions
 
 Template helpers for generating Datastar attributes:
 
 ```javascript
-const { GetSSE, PostSSE, PutSSE, PatchSSE, DeleteSSE, escapeHtml } = require('@johntom/datastar-fastify');
+const { GetSSE, PostSSE, PutSSE, PatchSSE, DeleteSSE, escapeHtml } = require('@johntom/datastar-fastify-sdk');
 
 // Generate action attributes
 GetSSE('/api/data')      // "@get('/api/data')"
@@ -359,54 +322,55 @@ npm run example
 # Full TodoMVC implementation
 npm run example:todo
 ```
+```bash
 
 ## Tests
+The test server emulates the Datastar SDK for GO test suite, providing the same functionality as the Go version but implemented in Node.js with Fastify.
 
-The test server emulates the Datastar SDK for Go test suite, providing the same functionality as the Go version but implemented in Node.js with Fastify.
+Created Files:
 
-### Created Files
+  1. testserver.js - Main test server that mirrors the Go implementation
+    - Listens on port 7331 (configurable via TEST_PORT env var)
+    - Handles POST requests to /test endpoint
+    - Processes three event types:
+        - patchElements - Patches HTML elements into the DOM
+      - patchSignals - Updates client-side signals
+      - executeScript - Executes JavaScript in the browser
+    - Supports all options: selector, mode, useViewTransition, onlyIfMissing, autoRemove, attributes, eventId, retryDuration
+    - Handles multiline scripts and signals (using signals-raw field)
+  2. test-request.js - Test client to verify the server works correctly
+    - Tests all three event types
+    - Tests multiple events in a single request
+    - Successfully validated all functionality
 
-1. **testserver.js** - Main test server that mirrors the Go implementation
-   - Listens on port 7331 (configurable via TEST_PORT env var)
-   - Handles POST requests to /test endpoint
-   - Processes three event types:
-     - `patchElements` - Patches HTML elements into the DOM
-     - `patchSignals` - Updates client-side signals
-     - `executeScript` - Executes JavaScript in the browser
-   - Supports all options: selector, mode, useViewTransition, onlyIfMissing, autoRemove, attributes, eventId, retryDuration
-   - Handles multiline scripts and signals (using signals-raw field)
+  Key Features:
 
-2. **test-request.js** - Test client to verify the server works correctly
-   - Tests all three event types
-   - Tests multiple events in a single request
-   - Successfully validated all functionality
+  - Signal Reading: Uses request.readSignals() from the Fastify SDK
+  - SSE Streaming: Uses reply.datastar() to create SSE connections
+  - Event Processing: Handles arrays of events sequentially
+  - Connection Monitoring: Checks if SSE connection is closed before processing each event
+  - Error Handling: Proper error responses with appropriate HTTP status codes
+  - Logging: Uses Fastify's built-in logger
 
-### Key Features
+  How to Use:
 
-- **Signal Reading:** Uses `request.readSignals()` from the Fastify SDK
-- **SSE Streaming:** Uses `reply.datastar()` to create SSE connections
-- **Event Processing:** Handles arrays of events sequentially
-- **Connection Monitoring:** Checks if SSE connection is closed before processing each event
-- **Error Handling:** Proper error responses with appropriate HTTP status codes
-- **Logging:** Uses Fastify's built-in logger
+  # Run automated tests (starts server, runs tests, stops server)
+  npm test
 
-### How to Use
+  # Or manually:
+  # 1. Start the test server in one terminal
+  npm run testserver
 
-```bash
-# Run automated tests (starts server, runs tests, stops server)
-npm test
+  # 2. In another terminal, run test requests
+  node test-request.js
 
-# Or manually:
-# 1. Start the test server in one terminal
-npm run testserver
+  # Custom port
+  TEST_PORT=8080 npm run testserver
 
-# 2. In another terminal, run test requests
-node test-request.js
-
-# Custom port
-TEST_PORT=8080 npm run testserver
+  
 ```
-
 ## License
 
 MIT
+"# datastar-fastify-sdk" 
+

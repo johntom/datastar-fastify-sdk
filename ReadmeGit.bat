@@ -1,6 +1,6 @@
 git add .
 pause
-git commit -m "4th commit"
+git commit -m "5th commit"
 pause
 git push
 

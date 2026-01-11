@@ -1,0 +1,30 @@
+ Now let me verify the changes by checking for any remaining raw.write calls with events.
+
+● Search(pattern: "raw\.write", path: "src\services\api_kanban.js", output_mode: "content")
+  ⎿  Found 1 line (ctrl+o to expand)
+
+● The refactoring is complete. The only remaining raw.write is for the heartbeat comment (: heartbeat) which is correct - SSE comments (lines starting with :) are used to keep connections alive without triggering event listeners, so they don't need the sendEvent() method.
+
+  Summary of changes:
+
+  1. Added to SDK (lib/sse.js):
+    - send(eventType, dataLines, options) - matches Go SDK's Send method
+    - sendEvent(eventType, data, options) - convenience method that auto-serializes to JSON
+  2. Updated SDK README with documentation for the new methods
+  3. Refactored api_kanban.js:
+    - broadcast() function now uses sse.sendEvent() instead of sse.reply.raw.write()
+    - Initial connected event now uses sse.sendEvent()
+
+  The Fastify SDK now has feature parity with the Go SDK for custom events:
+  ┌──────────────────────────────────────┬───────────────────────────────────────────────────────┐
+  │                Go SDK                │                      Fastify SDK                      │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────┤
+  │ sse.Send(eventType, dataLines, opts) │ sse.send(eventType, dataLines, options)               │
+  ├──────────────────────────────────────┼───────────────────────────────────────────────────────┤
+  │ N/A                                  │ sse.sendEvent(eventType, data, options) (convenience) │
+  └──────────────────────────────────────┴───────────────────────────────────────────────────────┘
+
+✻ Brewed for 3m 0s
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ test
