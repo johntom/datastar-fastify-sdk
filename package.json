@@ -1,6 +1,6 @@
 {
   "name": "@johntom/datastar-fastify-sdk",
-  "version": "1.0.0-RC.2",
+  "version": "1.0.0-RC.7",
   "description": "unofficial  Datastar SDK for Fastify - Build reactive web applications with Server-Sent Events",
   "main": "lib/index.js",
   

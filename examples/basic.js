@@ -36,7 +36,7 @@ app.get('/', async (request, reply) => {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Datastar + Fastify Demo</title>
-  <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0-RC.6/bundles/datastar.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v7/bundles/datastar.js"></script>
   <style>
     body { font-family: system-ui, sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
     button { padding: 0.5rem 1rem; margin: 0.25rem; cursor: pointer; }
