@@ -6,14 +6,14 @@ Unofficial [Datastar](https://data-star.dev) SDK for [Fastify](https://fastify.d
 
 This package provides a Node.js/Fastify SDK for working with Datastar.
 
-**Version:** 1.0.0-RC.2
+**Version:** 1.0.1
 
 ## Requirements
 
 - **Node.js 20+** (required by Fastify 5)
 - Tested with **Node.js 24+**
 - **Fastify 5.x**
-- **Datastar 1.0.0-RC.7** (client-side)
+- **Datastar 1.0.1** (client-side)
 
 ## Installation
 
@@ -51,7 +51,7 @@ app.get('/', async (request, reply) => {
     <!DOCTYPE html>
     <html>
     <head>
-      <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0-RC.7/bundles/datastar.js"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.1/bundles/datastar.js"></script>
     </head>
     <body>
       <div data-signals='{"count": 0}'>
@@ -256,6 +256,13 @@ sse.patchElements('<div id="content">Hello!</div>');
 sse.patchElements('<li>New item</li>', {
   selector: '#list',
   mode: 'append' // outer, inner, replace, prepend, append, before, after, remove
+});
+
+// SVG (or mathml) namespace — added in Datastar 1.0.0-RC.7
+sse.patchElements('<circle cx="10" cy="10" r="5" fill="red"/>', {
+  selector: '#vis',
+  mode: 'append',
+  namespace: 'svg' // 'html' (default), 'svg', 'mathml'
 });
 ```
 
