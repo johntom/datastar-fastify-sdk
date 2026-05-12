@@ -367,6 +367,33 @@ npm run example
 npm run example:todo
 ```
 
+## Production: enabling SSE compression
+
+Unlike the Datastar Go SDK, this Fastify SDK does not bundle compression. The recommended approach is to layer the official [`@fastify/compress`](https://github.com/fastify/fastify-compress) plugin in front of it:
+
+```js
+const Fastify = require('fastify');
+const compress = require('@fastify/compress');
+const { datastar } = require('@johntom/datastar-fastify');
+
+const app = Fastify();
+await app.register(compress, {
+  encodings: ['br', 'gzip', 'deflate'],
+  threshold: 0,
+  customTypes: /^text\/event-stream$/,
+});
+app.register(datastar);
+```
+
+Two settings are easy to miss and both matter for SSE:
+
+- **`threshold: 0`** — `@fastify/compress` skips small payloads by default. SSE events are typically small, so without this they ship uncompressed.
+- **`customTypes: /^text\/event-stream$/`** — the default content-type filter excludes event streams, so they need to be opted in explicitly.
+
+`@fastify/compress` negotiates the codec via the request's `Accept-Encoding` header, matching the Go SDK's behavior.
+
+**When this isn't enough:** `@fastify/compress` doesn't expose per-event flush controls, so very latency-sensitive feeds may experience buffering. If that becomes a problem, full SDK-level compression with per-event flushing is tracked in `todo.md` (Option B).
+
 ## Tests
 
 The test server emulates the Datastar SDK for Go test suite, providing the same functionality as the Go version but implemented in Node.js with Fastify.
