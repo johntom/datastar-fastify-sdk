@@ -1,0 +1,68 @@
+@echo off
+echo Git Branch Management Script
+echo =============================
+echo.
+
+echo Step 001: Refreshing README.md version block from .env (VERSION, VERSION_date, VERSION_mess)...
+call npm run update-readme
+pause
+
+
+echo.
+echo Step 01: Deleting local test branch...
+git branch -d test
+pause
+
+echo.
+echo Step 02: Deleting remote test branch...
+git push origin --delete test
+pause
+
+
+echo Step 03: Creating and switching to test branch...
+git checkout -b test 2>nul || git checkout test
+echo Pushing test branch to GitHub...
+git push -u origin test
+pause
+
+
+echo Step 2: Adding all changes to staging...
+git add .
+pause
+
+echo.
+echo Step 3: Committing changes...
+git commit -m "new version to test branch bla bla"
+pause
+
+echo.
+echo Step 4: Pushing test branch to origin...
+git push -u origin test
+pause
+
+echo.
+echo Step 5: Switching back to main branch...
+git checkout main
+pause
+
+echo.
+echo Step 6: Pulling latest changes from main...
+git pull origin main
+pause
+
+echo.
+echo Step 7: Merging test branch into main...
+git merge test
+pause
+
+echo.
+echo Step 8: Pushing updated main branch...
+git push origin main
+pause
+
+
+
+echo.
+echo Git workflow completed successfully!
+echo Press any key to exit...
+pause
