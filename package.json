@@ -3,12 +3,12 @@
   "version": "1.0.1",
   "description": "unofficial  Datastar SDK for Fastify - Build reactive web applications with Server-Sent Events",
   "main": "lib/index.js",
-  
   "scripts": {
     "example": "node examples/basic.js",
     "example:todo": "node examples/todo.js",
     "test": "node run-tests.js",
-    "testserver": "node testserver.js"
+    "testserver": "node testserver.js",
+    "update-readme": "node update-readme.js"
   },
   "keywords": [
     "datastar",
