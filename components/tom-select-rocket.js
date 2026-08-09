@@ -61,16 +61,18 @@ rocket('rocket-tom-select', {
     // + CSS .driver-picker-dropdown { min-width: 720px }) without changing
     // the dropdown's parent.
     dropdownClass: string.default(''),
-    // When true, as soon as the user's typing narrows the dropdown to a
+    // When active, as soon as the user's typing narrows the dropdown to a
     // single remaining option, that option is auto-selected. Two code
     // paths are wired: onType (local-option pickers, sync filter) and the
     // post-load event (remote search-url pickers, async results).
     // Single-select picker: setValue + close + blur.
     // Multi / check-options picker: addItem + clear typed text so the user
     //   can keep filtering for more matches.
-    // Used by the liability/wcomp search panels (5 multi-select pickers)
-    // and the detail header (Source of Inj / Injury Type / Occurrence /
-    // Affected Part / Dept / Driver).
+    // NOTE: the declared default below is NOT the authority — the live
+    // _autoSelectActive() gate in onFirstRender reads the raw attribute per
+    // call (unset → ON for single-select / OFF for multi; "false"/"0" → off),
+    // so the feature is runtime-toggleable via setAttribute. The prop is
+    // declared only so `auto-select-single` is a recognized attribute.
     autoSelectSingle: bool.default(false),
   }),
 
@@ -81,14 +83,26 @@ rocket('rocket-tom-select', {
     let prevOptionsStr = ''
     let lastSyncedValue = ''
 
-    // Shared auto-select-single resolver. Called from config.onType (set in
-    // buildConfig when autoSelectSingle is on) AND from a post-init 'load'
-    // listener (wired below after the instance exists, also when autoSelectSingle
-    // is on). One implementation, two call sites — covers both local-option
-    // and remote search-url pickers.
+    // Shared auto-select-single resolver. Called from config.onType (always
+    // wired in buildConfig) AND from a post-init 'load' listener (always wired
+    // for search-url pickers). One implementation, two call sites — covers
+    // both local-option and remote search-url pickers.
+    //
+    // _autoSelectActive() is the per-call LIVE gate: it reads the raw
+    // attribute on every keystroke so the feature can be toggled at runtime
+    // via setAttribute / data-attr:auto-select-single (see the demo page).
+    // bool.default(false) would collapse "unset" and explicit "false", so the
+    // raw attribute is authoritative: unset → ON for single-select / OFF for
+    // multi; explicit "false"/"0" → off; anything else → on.
     const isMulti = !!props.checkOptions || (props.maxItems || 1) > 1
+    function _autoSelectActive() {
+      const raw = host.getAttribute('auto-select-single')
+      if (raw === null) return !isMulti
+      return raw !== 'false' && raw !== '0'
+    }
     function _tryAutoSelectSingle(ts) {
       if (!ts) return
+      if (!_autoSelectActive()) return
       const items = ts.currentResults && ts.currentResults.items
       if (!items || items.length !== 1) return
       const only = items[0].id
@@ -145,24 +159,23 @@ rocket('rocket-tom-select', {
         config.plugins.remove_button = { title: 'Remove' }
       }
 
-      if (props.autoSelectSingle) {
-        // Auto-resolve when typing narrows the dropdown to a single option.
-        // Fired from two places (both wired up post-init in onFirstRender):
-        //   • onType  → covers local-option pickers (TomSelect filters
-        //     currentResults synchronously, so setTimeout(0) lets that pass
-        //     finish before we inspect items).
-        //   • 'load' event → covers remote search-url pickers (results
-        //     arrive AFTER the keystroke; onType already ran and saw 0).
-        // currentResults.items[i].id is the option's value (per valueField).
-        // Single-select  → setValue + close + blur.
-        // Multi / check-options → addItem and clear the typed text so the
-        //   user can keep filtering for more matches (the check-options
-        //   Apply / dropdown_close auto-apply still gate the actual search).
-        config.onType = function (query) {
-          if (!query) return
-          var self = this
-          setTimeout(function () { _tryAutoSelectSingle(self) }, 0)
-        }
+      // Auto-resolve when typing narrows the dropdown to a single option.
+      // Always wired; the per-call _autoSelectActive() gate inside
+      // _tryAutoSelectSingle decides whether it acts. Fired from two places:
+      //   • onType  → covers local-option pickers (TomSelect filters
+      //     currentResults synchronously, so setTimeout(0) lets that pass
+      //     finish before we inspect items).
+      //   • 'load' event → covers remote search-url pickers (results
+      //     arrive AFTER the keystroke; onType already ran and saw 0).
+      // currentResults.items[i].id is the option's value (per valueField).
+      // Single-select  → setValue + close + blur.
+      // Multi / check-options → addItem and clear the typed text so the
+      //   user can keep filtering for more matches (the check-options
+      //   Apply / dropdown_close auto-apply still gate the actual search).
+      config.onType = function (query) {
+        if (!query) return
+        var self = this
+        setTimeout(function () { _tryAutoSelectSingle(self) }, 0)
       }
 
       if (opts.length > 0) {
@@ -369,7 +382,8 @@ rocket('rocket-tom-select', {
 
         // Remote-picker auto-select: re-evaluate after each async load
         // completes (onType already ran before fetch returned and saw 0).
-        if (props.autoSelectSingle && props.searchUrl) {
+        // Always wired; the per-call _autoSelectActive() gate decides.
+        if (props.searchUrl) {
           tsInstance.on('load', function () {
             _tryAutoSelectSingle(tsInstance)
           })
