@@ -11,7 +11,7 @@ This package provides a Node.js/Fastify SDK for working with Datastar.
 | Field          | Value        |
 | -------------- | ------------ |
 | `VERSION`      | `2.0.2` |
-| `VERSION_date` | `08/08/26` |
+| `VERSION_date` | `08/09/26` |
 | `VERSION_mess` | `Uses Datastar 1.0.2` |
 
 ## Requirements
