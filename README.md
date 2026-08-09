@@ -10,16 +10,16 @@ This package provides a Node.js/Fastify SDK for working with Datastar.
 
 | Field          | Value        |
 | -------------- | ------------ |
-| `VERSION`      | `2.0.1` |
-| `VERSION_date` | `05/16/26` |
-| `VERSION_mess` | `Uses Datastar 1.0.1` |
+| `VERSION`      | `2.0.2` |
+| `VERSION_date` | `08/08/26` |
+| `VERSION_mess` | `Uses Datastar 1.0.2` |
 
 ## Requirements
 
 - **Node.js 20+** (required by Fastify 5)
 - Tested with **Node.js 24+**
 - **Fastify 5.x**
-- **Datastar 1.0.1** (client-side)
+- **Datastar 1.0.2** (client-side)
 
 ## Installation
 
@@ -57,7 +57,7 @@ app.get('/', async (request, reply) => {
     <!DOCTYPE html>
     <html>
     <head>
-      <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.1/bundles/datastar.js"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.2/bundles/datastar.js"></script>
     </head>
     <body>
       <div data-signals='{"count": 0}'>
@@ -269,6 +269,15 @@ sse.patchElements('<circle cx="10" cy="10" r="5" fill="red"/>', {
   selector: '#vis',
   mode: 'append',
   namespace: 'svg' // 'html' (default), 'svg', 'mathml'
+});
+
+// Scoped view transition — added in Datastar 1.0.2
+// viewTransitionSelector picks the element the View Transition runs on;
+// it is only sent when useViewTransition is true
+sse.patchElements('<div id="feed">...</div>', {
+  selector: '#feed',
+  useViewTransition: true,
+  viewTransitionSelector: '#main'
 });
 ```
 

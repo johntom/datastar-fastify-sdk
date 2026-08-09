@@ -1,6 +1,6 @@
 git add .
 pause
-git commit -m "6th commit 1.0.0-RC.7"
+git commit -m "pp"
 pause
 git push
 
