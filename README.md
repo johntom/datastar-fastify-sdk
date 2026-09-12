@@ -2,6 +2,8 @@
 
 # Datastar Fastify SDK 
 ## https://github.com/johntom/datastar-fastify-sdk
+## https://github.com/johntom/DataStar-Rocket
+
 Unofficial [Datastar](https://data-star.dev) SDK for [Fastify](https://fastify.dev) - Build reactive web applications with Server-Sent Events. 
 
 This package provides a Node.js/Fastify SDK for working with Datastar.
