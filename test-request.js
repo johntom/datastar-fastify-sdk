@@ -177,6 +177,30 @@ async function testServer() {
     console.error('Error:', error.message);
   }
 
+  // Test 5: QUERY method (Datastar 1.0.4 @query() — signals in the JSON body)
+  console.log('\n=== Test 5: QUERY request (@query, Datastar 1.0.4) ===');
+  try {
+    const response5 = await fetch(`${baseUrl}/query`, {
+      method: 'QUERY',
+      headers: { 'Content-Type': 'application/json', 'datastar-request': 'true' },
+      body: JSON.stringify({ filter: 'abc', page: 2 })
+    });
+    console.log('Status:', response5.status);
+    const result5 = await response5.text();
+    console.log('Response:', result5);
+    const ok = response5.status === 200
+      && result5.includes('event: datastar-patch-signals')
+      && result5.includes('"method":"QUERY"')
+      && result5.includes('"filter":"abc"');
+    if (!ok) {
+      console.error('QUERY test FAILED: expected a datastar-patch-signals event echoing the body signals');
+      process.exitCode = 1;
+    }
+  } catch (error) {
+    console.error('Error:', error.message);
+    process.exitCode = 1;
+  }
+
   console.log('\n=== All tests completed ===\n');
 }
 

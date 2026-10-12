@@ -12,16 +12,16 @@ This package provides a Node.js/Fastify SDK for working with Datastar.
 
 | Field          | Value        |
 | -------------- | ------------ |
-| `VERSION`      | `2.0.2` |
-| `VERSION_date` | `08/09/26` |
-| `VERSION_mess` | `Uses Datastar 1.0.2` |
+| `VERSION`      | `2.0.3` |
+| `VERSION_date` | `10/12/26` |
+| `VERSION_mess` | `Uses Datastar 1.0.4 — adds @query()/QuerySSE, auto-registers the QUERY method on Fastify < 5.11, Rocket components now target the free datastar-rocket.js bundle (Rocket left Pro in 1.0.4)` |
 
 ## Requirements
 
 - **Node.js 20+** (required by Fastify 5)
 - Tested with **Node.js 24+**
 - **Fastify 5.x**
-- **Datastar 1.0.2** (client-side)
+- **Datastar 1.0.4** (client-side; Rocket is a free bundle since 1.0.4 — see "Rocket components" below)
 
 ## Installation
 
@@ -40,6 +40,7 @@ const { datastar } = require('@johntom/datastar-fastify');
 const { PatchMode } = require('@johntom/datastar-fastify');
 const { datastar, GetSSE, PostSSE, escapeHtml, PatchMode } = require('@johntom/datastar-fastify');
 const { datastar, PostSSE, DeleteSSE, PatchMode, escapeHtml } = require('@johntom/datastar-fastify');
+const { datastar, QuerySSE } = require('@johntom/datastar-fastify'); // @query() — Datastar 1.0.4
 ```
 
 ## Quick Start
@@ -59,7 +60,7 @@ app.get('/', async (request, reply) => {
     <!DOCTYPE html>
     <html>
     <head>
-      <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.2/bundles/datastar.js"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.4/bundles/datastar.js"></script>
     </head>
     <body>
       <div data-signals='{"count": 0}'>
@@ -99,7 +100,7 @@ app.register(datastar, {
 
 #### `request.readSignals()`
 
-Reads Datastar signals from the request (query params for GET, body for POST/PUT/PATCH/DELETE).
+Reads Datastar signals from the request (query params for GET; JSON body for POST/PUT/PATCH/DELETE and — since Datastar 1.0.4 — QUERY).
 
 ```javascript
 const { success, signals, error } = await request.readSignals();
@@ -359,11 +360,12 @@ sse.sendEvent('user-joined', { name: 'Alice' }, { eventId: 'evt-001' });
 Template helpers for generating Datastar attributes:
 
 ```javascript
-const { GetSSE, PostSSE, PutSSE, PatchSSE, DeleteSSE, escapeHtml } = require('@johntom/datastar-fastify');
+const { GetSSE, PostSSE, PutSSE, PatchSSE, DeleteSSE, QuerySSE, escapeHtml } = require('@johntom/datastar-fastify');
 
 // Generate action attributes
 GetSSE('/api/data')      // "@get('/api/data')"
 PostSSE('/api/submit')   // "@post('/api/submit')"
+QuerySSE('/api/search')  // "@query('/api/search')"  (Datastar 1.0.4)
 
 // With format strings
 GetSSE('/api/users/%s', userId)
@@ -371,6 +373,43 @@ GetSSE('/api/users/%s', userId)
 // HTML escaping
 escapeHtml('<script>alert("xss")</script>')
 ```
+
+### QUERY requests (`@query()`, Datastar 1.0.4)
+
+Datastar 1.0.4 added the `@query()` action: an HTTP `QUERY` request (RFC 10008) that carries the signals in the JSON body instead of the URL — use it for read-only searches whose filters are too big for `?datastar=`. `request.readSignals()` already reads the body for QUERY; the server only needs a QUERY route:
+
+```javascript
+// Fastify >= 5.11.0 routes QUERY natively. On older 5.x the datastar plugin
+// registers the method itself (plugin option { queryMethod: false } disables
+// that) — but a QUERY route can only be declared AFTER the plugin has loaded:
+// `await app.register(datastar)`, or declare it in app.after() / a nested plugin.
+await app.register(datastar);
+
+app.route({
+  method: 'QUERY',
+  url: '/api/search',
+  handler: async (request, reply) => {
+    const { signals } = await request.readSignals();   // from the JSON body
+    await reply.datastar((sse) => {
+      sse.patchElements(`<ul id="results">${renderRows(search(signals.filter))}</ul>`);
+    });
+  },
+});
+```
+
+```html
+<input data-bind:filter data-on:input__debounce.300ms="${QuerySSE('/api/search')}">
+```
+
+## Rocket components (free since Datastar 1.0.4)
+
+`components/` holds the canonical Rocket JS-API components (`<rocket-tom-select>`, `<rocket-tabulator>`, `<rocket-echarts>`). Rocket left Datastar Pro in **v1.0.4** and ships as the free MIT bundle `datastar-rocket.js` (Datastar core + Rocket — load it *instead of* `datastar.js`):
+
+```html
+<script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.4/bundles/datastar-rocket.js"></script>
+```
+
+The components import `rocket` from `/public/js/datastar-rocket.js` — self-host that file (or a Datastar Pro v1.0.4 `datastar-pro.js`, which also includes Rocket) and change the one import line if your path differs. The component API (`props` / `render` / `onFirstRender`, `data-rocket-ref`, `emit`, `observeProps`, `cleanup`) is unchanged between the Pro v1.0.1 Rocket (beta.1) and the free Rocket beta.2 — beta.2 is bug fixes only. Demo pages: https://github.com/johntom/DataStar-Rocket.
 
 ## Examples
 
@@ -430,6 +469,7 @@ The test server emulates the Datastar SDK for Go test suite, providing the same 
 2. **test-request.js** - Test client to verify the server works correctly
    - Tests all three event types
    - Tests multiple events in a single request
+   - Tests a QUERY route (`@query()`, Datastar 1.0.4) — the plugin registers the method on the Fastify 5.6 dev dependency
    - Successfully validated all functionality
 
 ### Key Features

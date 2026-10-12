@@ -21,6 +21,22 @@ const app = Fastify({ logger: true });
 // Register the Datastar plugin
 app.register(datastar);
 
+// QUERY endpoint (Datastar 1.0.4 `@query()`): signals arrive in the JSON body.
+// Declared in app.after() so it runs once the datastar plugin has registered
+// the QUERY method on Fastify < 5.11 (the dev dependency here is 5.6.x).
+app.after(() => {
+  app.route({
+    method: 'QUERY',
+    url: '/query',
+    handler: async (request, reply) => {
+      const result = await request.readSignals();
+      await reply.datastar((sse) => {
+        sse.patchSignals({ method: request.method, echoed: result.signals || {} });
+      });
+    },
+  });
+});
+
 /**
  * Event represents a test event from the SDK test suite
  * @typedef {Object} Event

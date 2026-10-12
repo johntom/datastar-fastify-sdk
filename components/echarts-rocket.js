@@ -1,4 +1,4 @@
-// Rocket ECharts component — Datastar Pro v1.0.1 bundle (OSS core 1.0.2)
+// Rocket ECharts component — Datastar v1.0.4 + Rocket beta.2 (free datastar-rocket.js bundle; the Pro v1.0.4 datastar-pro.js also includes Rocket — only the import path differs)
 // Public contract preserved from the RC.7/8 template version:
 //   tag:    <rocket-echarts>
 //   props:  option, height, theme, resize-delay
@@ -16,7 +16,7 @@
 // object, not a string. Matches the DS canonical example at
 // https://data-star.dev/examples/rocket_echarts.
 
-import { rocket } from '/public/js/datastar-pro.js'
+import { rocket } from '/public/js/datastar-rocket.js'
 
 // Resolve CSS variables like "var(--clr-primary)" against the host element's
 // computed style. Applied recursively to nested arrays/objects.
